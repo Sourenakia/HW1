@@ -361,6 +361,24 @@ body {
   margin-bottom: var(--space-4);
 }
 
+/* List page */
+.list-summary {
+  margin-bottom: var(--space-4);
+  color: var(--color-text-muted);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-12) var(--space-4);
+  text-align: center;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
 /* Book grid */
 .book-grid {
   display: grid;

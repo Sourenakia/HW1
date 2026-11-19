@@ -30,9 +30,15 @@
     return pages.notFound;
   }
 
+  function isBooksRoute(route) {
+    return Boolean(route) && route.segments.length === 1 && route.segments[0] === "books";
+  }
+
   function render() {
     var app = document.getElementById("app");
-    var page = matchRoute(parseHash())();
+    var route = parseHash();
+    var page = matchRoute(route)();
+    App.components.setSearchQuery(isBooksRoute(route) ? App.catalog.parseListFilters(route.params).q : "");
     app.textContent = "";
     app.appendChild(page.node);
     document.title = page.title + " | " + App.utils.SITE_NAME;

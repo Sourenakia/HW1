@@ -21,6 +21,21 @@
     });
   }
 
+  // Makes Persian text comparable for search: Arabic ي/ك → Persian ی/ک,
+  // ۀ → ه, harakat/hamza marks removed, ZWNJ treated as a space,
+  // Latin lower-cased, whitespace collapsed and trimmed.
+  function normalizeText(text) {
+    return String(text)
+      .replace(/ي/g, "ی")
+      .replace(/ك/g, "ک")
+      .replace(/ۀ/g, "ه")
+      .replace(/[ً-ٰٟ]/g, "")
+      .replace(/‌/g, " ")
+      .toLowerCase()
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
   function formatNumber(number) {
     var grouped = String(Math.round(number)).replace(/\B(?=(\d{3})+(?!\d))/g, "٬");
     return toPersianDigits(grouped);
@@ -93,6 +108,7 @@
     SITE_NAME: SITE_NAME,
     toPersianDigits: toPersianDigits,
     toLatinDigits: toLatinDigits,
+    normalizeText: normalizeText,
     formatNumber: formatNumber,
     formatPrice: formatPrice,
     formatRating: formatRating,

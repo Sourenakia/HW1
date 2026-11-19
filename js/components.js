@@ -34,6 +34,14 @@
     return form;
   }
 
+  // Keeps the header search box in sync with the current list query.
+  function setSearchQuery(query) {
+    var input = document.getElementById("site-search-input");
+    if (input && input.value !== query) {
+      input.value = query;
+    }
+  }
+
   function renderSiteNav(navId) {
     var items = store.getCategoriesInUse().map(function (category) {
       return el("li", null, [
@@ -181,6 +189,7 @@
   App.components = {
     renderHeader: renderHeader,
     renderFooter: renderFooter,
-    renderBookCard: renderBookCard
+    renderBookCard: renderBookCard,
+    setSearchQuery: setSearchQuery
   };
 })(window.App = window.App || {});

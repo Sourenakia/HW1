@@ -16,8 +16,39 @@
     return { title: title, node: el("section", null, [el("h1", { text: title }), grid]) };
   }
 
-  function renderBooksPage() {
-    return renderPlaceholder("فهرست کتاب‌ها");
+  function renderListSummary(count, query) {
+    var countText = App.utils.toPersianDigits(count);
+    var text = query
+      ? countText + " نتیجه برای «" + query + "»"
+      : countText + " کتاب";
+    return el("p", { class: "list-summary", role: "status", text: text });
+  }
+
+  function renderEmptyResults(query) {
+    var message = query
+      ? "کتابی با «" + query + "» پیدا نشد."
+      : "کتابی برای نمایش نیست.";
+    return el("div", { class: "empty-state" }, [
+      el("p", { text: message }),
+      el("a", { class: "button button--neutral", href: "#/books", text: "نمایش همهٔ کتاب‌ها" })
+    ]);
+  }
+
+  function renderBooksPage(params) {
+    var title = "فهرست کتاب‌ها";
+    var filters = App.catalog.parseListFilters(params);
+    var books = App.catalog.selectBooks(BOOKS, filters);
+
+    var content = books.length > 0
+      ? el("div", { class: "book-grid" }, books.map(renderBookCard))
+      : renderEmptyResults(filters.q);
+
+    var node = el("section", null, [
+      el("h1", { text: title }),
+      renderListSummary(books.length, filters.q),
+      content
+    ]);
+    return { title: title, node: node };
   }
 
   function renderBookPage(id) {
