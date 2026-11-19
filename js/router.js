@@ -35,10 +35,11 @@
   }
 
   // Re-rendering replaces every node in <main>, which would drop keyboard focus.
-  // If the focused control still exists (same id) refocus it and keep the scroll
-  // position; otherwise move focus to the new page heading.
-  function restoreFocus(app, focusedId, focusWasInApp) {
-    var target = focusedId ? document.getElementById(focusedId) : null;
+  // On the same page (only the query changed, e.g. a filter), refocus the same
+  // control by id and keep the scroll position. On a new page, move focus to
+  // its heading and let render() scroll to the top.
+  function restoreFocus(app, focusedId, focusWasInApp, samePage) {
+    var target = samePage && focusedId ? document.getElementById(focusedId) : null;
     if (target && app.contains(target)) {
       target.focus({ preventScroll: true });
       return true;
@@ -53,6 +54,8 @@
     return false;
   }
 
+  var lastPageKey = null;
+
   function render() {
     var app = document.getElementById("app");
     var active = document.activeElement;
@@ -60,13 +63,16 @@
     var focusedId = focusWasInApp ? active.id : "";
 
     var route = parseHash();
+    var pageKey = route ? route.segments.join("/") : null;
+    var samePage = pageKey !== null && pageKey === lastPageKey;
+    lastPageKey = pageKey;
     var page = matchRoute(route)();
     App.components.setSearchQuery(isBooksRoute(route) ? App.catalog.parseListFilters(route.params).q : "");
     app.textContent = "";
     app.appendChild(page.node);
     document.title = page.title + " | " + App.utils.SITE_NAME;
 
-    if (!restoreFocus(app, focusedId, focusWasInApp)) {
+    if (!restoreFocus(app, focusedId, focusWasInApp, samePage)) {
       window.scrollTo(0, 0);
     }
   }

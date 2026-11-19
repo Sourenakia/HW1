@@ -18,6 +18,8 @@
 :root {
   /* Colors */
   --color-primary: #00A2A4;
+  /* Darker teal for text/fills behind text: white on #00A2A4 is only ~3:1. */
+  --color-primary-strong: #00787A;
   --color-primary-soft: #E6F6F7;
   --color-bg: #FCFCFA;
   --color-surface: #FFFFFF;
@@ -37,6 +39,10 @@
   --radius-purchase: 12px;
   --radius-banner: 16px;
   --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shadow-cover: 0 4px 16px rgba(0, 0, 0, 0.12);
 
   /* Spacing (multiples of 4px) */
   --space-1: 4px;
@@ -120,6 +126,12 @@ ol {
   outline-offset: 2px;
 }
 
+/* Page headings get focus from the router after navigation (for screen
+   readers); they are not controls, so no focus ring. */
+h1[tabindex="-1"]:focus {
+  outline: none;
+}
+
 /* Utilities */
 .visually-hidden {
   position: absolute;
@@ -158,6 +170,41 @@ ol {
 .button--neutral {
   background-color: var(--color-button-neutral);
   color: var(--color-text);
+}
+
+.button--primary {
+  background-color: var(--color-primary-strong);
+  color: var(--color-surface);
+  font-weight: 700;
+}
+
+.button--soft {
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-strong);
+  font-weight: 700;
+}
+
+.button--outline {
+  background-color: transparent;
+  border: 1px solid var(--color-primary-strong);
+  color: var(--color-primary-strong);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button .icon {
+  width: 18px;
+  height: 18px;
+  margin-inline-end: var(--space-1);
+}
+
+.section-title {
+  margin-bottom: var(--space-4);
+  font-size: var(--font-size-row-title);
+  font-weight: 700;
 }
 
 /* Layout */
@@ -561,4 +608,182 @@ body {
 .book-card__fav[aria-pressed="true"] svg {
   fill: var(--color-primary);
   stroke: var(--color-primary);
+}
+
+/* Breadcrumb */
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-6);
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+}
+
+.breadcrumb li + li::before {
+  content: "/";
+  margin-inline-end: var(--space-1);
+}
+
+.breadcrumb a:hover {
+  color: var(--color-primary-strong);
+}
+
+/* Book detail */
+.book-detail__top {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.book-detail__cover {
+  position: relative;
+  width: 160px;
+  justify-self: center;
+  overflow: hidden;
+  border-radius: var(--radius-cover);
+  box-shadow: var(--shadow-cover);
+}
+
+.book-detail__cover img {
+  width: 100%;
+  height: auto;
+}
+
+.book-detail__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+#app .book-detail__title {
+  margin-bottom: 0;
+  font-size: var(--font-size-book-title);
+  line-height: 1.5;
+}
+
+.book-detail__rating {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  color: var(--color-text-muted);
+}
+
+.book-detail__rating strong {
+  font-size: 18px;
+  color: var(--color-text);
+}
+
+.book-detail__meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2) var(--space-4);
+}
+
+.book-detail__meta dt {
+  color: var(--color-text-muted);
+}
+
+.book-detail__meta a {
+  color: var(--color-primary-strong);
+}
+
+.book-detail__section {
+  margin-top: var(--space-12);
+}
+
+.book-detail__description {
+  line-height: 1.9;
+}
+
+/* Purchase box */
+.purchase-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-purchase);
+  box-shadow: var(--shadow-card);
+}
+
+.purchase-box .button {
+  width: 100%;
+  min-height: 44px;
+}
+
+.purchase-box__original {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.purchase-box__discount {
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-discount);
+  color: var(--color-surface);
+  font-size: var(--font-size-small);
+}
+
+.purchase-box__final {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.purchase-box__read {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.purchase-box__note {
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  /* Cover on the right, info beside it, purchase box under the info. */
+  .book-detail__top {
+    grid-template-columns: 220px 1fr;
+    grid-template-areas:
+      "cover info"
+      "cover box";
+  }
+
+  .book-detail__cover {
+    grid-area: cover;
+    width: 100%;
+  }
+
+  .book-detail__info {
+    grid-area: info;
+  }
+
+  .purchase-box {
+    grid-area: box;
+    max-width: 320px;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Three columns as on Taaghche: cover · info · purchase box. */
+  .book-detail__top {
+    grid-template-columns: 240px 1fr 300px;
+    grid-template-areas: "cover info box";
+    gap: var(--space-8);
+  }
+
+  .book-detail__info {
+    padding-top: var(--space-12);
+  }
+
+  .purchase-box {
+    max-width: none;
+    margin-top: var(--space-12);
+  }
 }

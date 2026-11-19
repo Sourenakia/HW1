@@ -13,6 +13,27 @@
     return null;
   }
 
+  function findCategoryById(id) {
+    for (var i = 0; i < CATEGORIES.length; i++) {
+      if (CATEGORIES[i].id === id) return CATEGORIES[i];
+    }
+    return null;
+  }
+
+  // A sample counts only if it has at least one paragraph; null/missing = none.
+  function hasSample(book) {
+    return Array.isArray(book.sample) && book.sample.length > 0;
+  }
+
+  // Other books of the same category, best rated first.
+  function getRelatedBooks(book) {
+    return BOOKS.filter(function (other) {
+      return other.category === book.category && other.id !== book.id;
+    }).sort(function (a, b) {
+      return b.rating - a.rating;
+    });
+  }
+
   // Categories that actually have books; labels and order come from CATEGORIES.
   function getCategoriesInUse() {
     return CATEGORIES.filter(function (category) {
@@ -163,6 +184,9 @@
     onChange: onChange,
     isValidPhone: isValidPhone,
     findBookById: findBookById,
+    findCategoryById: findCategoryById,
+    hasSample: hasSample,
+    getRelatedBooks: getRelatedBooks,
     getCategoriesInUse: getCategoriesInUse,
     getDiscountPercent: getDiscountPercent,
     getFinalPrice: getFinalPrice,

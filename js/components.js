@@ -196,6 +196,7 @@
     renderHeader: renderHeader,
     renderFooter: renderFooter,
     renderBookCard: renderBookCard,
+    renderCoverBadge: renderCoverBadge,
     setSearchQuery: setSearchQuery
   };
 })(window.App = window.App || {});
