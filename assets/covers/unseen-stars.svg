@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <rect width="400" height="600" fill="#14142B"/>
+  <circle cx="200" cy="220" r="90" fill="none" stroke="#F5E9B8" stroke-width="2" opacity="0.5"/>
+  <circle cx="200" cy="220" r="8" fill="#F5E9B8"/>
+  <circle cx="90" cy="110" r="4" fill="#F5E9B8"/>
+  <circle cx="320" cy="90" r="5" fill="#F5E9B8"/>
+  <circle cx="300" cy="320" r="3" fill="#F5E9B8"/>
+  <circle cx="80" cy="300" r="5" fill="#F5E9B8"/>
+  <circle cx="150" cy="70" r="3" fill="#F5E9B8"/>
+  <circle cx="340" cy="210" r="3" fill="#F5E9B8"/>
+  <rect x="40" y="395" width="320" height="2" fill="#F5E9B8" opacity="0.5"/>
+  <text x="200" y="450" fill="#F5E9B8" font-family="Tahoma, sans-serif" font-size="38" font-weight="bold" text-anchor="middle" direction="rtl">ستاره‌هایی که</text>
+  <text x="200" y="502" fill="#F5E9B8" font-family="Tahoma, sans-serif" font-size="38" font-weight="bold" text-anchor="middle" direction="rtl">نمی‌بینیم</text>
+</svg>

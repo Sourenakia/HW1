@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <rect width="400" height="600" fill="#BFE3F2"/>
+  <polygon points="200,80 270,190 200,300 130,190" fill="#D93A3A"/>
+  <path d="M200 80 V300 M130 190 H270" stroke="#8E1F1F" stroke-width="3"/>
+  <path d="M200 300 Q230 330 200 350 T200 380" stroke="#8E1F1F" stroke-width="3" fill="none"/>
+  <rect x="40" y="395" width="320" height="2" fill="#8E1F1F" opacity="0.5"/>
+  <text x="200" y="450" fill="#8E1F1F" font-family="Tahoma, sans-serif" font-size="38" font-weight="bold" text-anchor="middle" direction="rtl">سفر</text>
+  <text x="200" y="502" fill="#8E1F1F" font-family="Tahoma, sans-serif" font-size="38" font-weight="bold" text-anchor="middle" direction="rtl">بادبادک قرمز</text>
+</svg>

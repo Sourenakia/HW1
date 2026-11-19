@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <rect width="400" height="600" fill="#6B8E3D"/>
+  <rect x="185" y="230" width="30" height="120" fill="#4A3A22"/>
+  <circle cx="200" cy="190" r="85" fill="#8DB35A"/>
+  <circle cx="140" cy="230" r="50" fill="#8DB35A"/>
+  <circle cx="260" cy="230" r="50" fill="#8DB35A"/>
+  <rect x="40" y="395" width="320" height="2" fill="#FFFFFF" opacity="0.5"/>
+  <text x="200" y="450" fill="#FFFFFF" font-family="Tahoma, sans-serif" font-size="38" font-weight="bold" text-anchor="middle" direction="rtl">دوستان</text>
+  <text x="200" y="502" fill="#FFFFFF" font-family="Tahoma, sans-serif" font-size="38" font-weight="bold" text-anchor="middle" direction="rtl">جنگل بلوط</text>
+</svg>

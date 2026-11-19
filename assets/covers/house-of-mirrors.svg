@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <rect width="400" height="600" fill="#E8DCC8"/>
+  <ellipse cx="200" cy="230" rx="70" ry="110" fill="none" stroke="#CBB89A" stroke-width="10"/>
+  <ellipse cx="200" cy="230" rx="45" ry="80" fill="none" stroke="#CBB89A" stroke-width="6"/>
+  <ellipse cx="200" cy="230" rx="20" ry="45" fill="#CBB89A"/>
+  <rect x="40" y="395" width="320" height="2" fill="#3A2E22" opacity="0.5"/>
+  <text x="200" y="476" fill="#3A2E22" font-family="Tahoma, sans-serif" font-size="38" font-weight="bold" text-anchor="middle" direction="rtl">خانهٔ آینه‌ها</text>
+</svg>

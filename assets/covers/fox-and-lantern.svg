@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <rect width="400" height="600" fill="#D9643A"/>
+  <circle cx="200" cy="230" r="110" fill="#F2C14E" opacity="0.35"/>
+  <rect x="160" y="180" width="80" height="110" rx="12" fill="#F2C14E"/>
+  <rect x="175" y="150" width="50" height="30" rx="6" fill="#FFF8EE"/>
+  <path d="M180 150 A20 20 0 0 1 220 150" stroke="#FFF8EE" stroke-width="6" fill="none"/>
+  <rect x="40" y="395" width="320" height="2" fill="#FFF8EE" opacity="0.5"/>
+  <text x="200" y="450" fill="#FFF8EE" font-family="Tahoma, sans-serif" font-size="38" font-weight="bold" text-anchor="middle" direction="rtl">روباه و</text>
+  <text x="200" y="502" fill="#FFF8EE" font-family="Tahoma, sans-serif" font-size="38" font-weight="bold" text-anchor="middle" direction="rtl">فانوس جادویی</text>
+</svg>

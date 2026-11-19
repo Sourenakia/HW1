@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <rect width="400" height="600" fill="#1F4E5F"/>
+  <circle cx="200" cy="200" r="70" fill="#3D7183"/>
+  <path d="M40 300 Q80 280 120 300 T200 300 T280 300 T360 300" stroke="#F2F2F2" stroke-width="5" fill="none" opacity="0.6"/>
+  <path d="M40 340 Q80 320 120 340 T200 340 T280 340 T360 340" stroke="#F2F2F2" stroke-width="5" fill="none" opacity="0.4"/>
+  <rect x="40" y="395" width="320" height="2" fill="#F2F2F2" opacity="0.5"/>
+  <text x="200" y="476" fill="#F2F2F2" font-family="Tahoma, sans-serif" font-size="38" font-weight="bold" text-anchor="middle" direction="rtl">سایه‌های بندر</text>
+</svg>

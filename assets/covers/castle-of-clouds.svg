@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <rect width="400" height="600" fill="#A9C6E8"/>
+  <rect x="140" y="170" width="120" height="130" fill="#233A5C"/>
+  <rect x="120" y="130" width="40" height="170" fill="#233A5C"/>
+  <rect x="240" y="130" width="40" height="170" fill="#233A5C"/>
+  <rect x="185" y="250" width="30" height="50" rx="15" fill="#A9C6E8"/>
+  <circle cx="110" cy="320" r="40" fill="#FFFFFF"/>
+  <circle cx="170" cy="335" r="45" fill="#FFFFFF"/>
+  <circle cx="240" cy="335" r="45" fill="#FFFFFF"/>
+  <circle cx="295" cy="320" r="40" fill="#FFFFFF"/>
+  <rect x="40" y="395" width="320" height="2" fill="#233A5C" opacity="0.5"/>
+  <text x="200" y="476" fill="#233A5C" font-family="Tahoma, sans-serif" font-size="38" font-weight="bold" text-anchor="middle" direction="rtl">قلعهٔ ابرها</text>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <rect width="400" height="600" fill="#F2B544"/>
+  <circle cx="200" cy="200" r="85" fill="#E0962A"/>
+  <rect x="170" y="280" width="60" height="50" rx="8" fill="#2B2B2B"/>
+  <path d="M200 140 V230 M160 190 H240" stroke="#F2B544" stroke-width="10" stroke-linecap="round"/>
+  <rect x="40" y="395" width="320" height="2" fill="#2B2B2B" opacity="0.5"/>
+  <text x="200" y="476" fill="#2B2B2B" font-family="Tahoma, sans-serif" font-size="38" font-weight="bold" text-anchor="middle" direction="rtl">مغز کنجکاو</text>
+</svg>

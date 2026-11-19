@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" width="400" height="600">
+  <rect width="400" height="600" fill="#2C3E66"/>
+  <path d="M150 360 L195 120 M250 360 L205 120" stroke="#4A6194" stroke-width="8" fill="none"/>
+  <path d="M160 320 H240 M168 270 H232 M176 220 H224 M184 170 H216" stroke="#4A6194" stroke-width="6"/>
+  <circle cx="200" cy="100" r="14" fill="#F5E9B8"/>
+  <rect x="40" y="395" width="320" height="2" fill="#FFFFFF" opacity="0.5"/>
+  <text x="200" y="450" fill="#FFFFFF" font-family="Tahoma, sans-serif" font-size="38" font-weight="bold" text-anchor="middle" direction="rtl">آخرین قطار</text>
+  <text x="200" y="502" fill="#FFFFFF" font-family="Tahoma, sans-serif" font-size="38" font-weight="bold" text-anchor="middle" direction="rtl">شمال</text>
+</svg>
