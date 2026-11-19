@@ -34,19 +34,46 @@
     return Boolean(route) && route.segments.length === 1 && route.segments[0] === "books";
   }
 
+  // Re-rendering replaces every node in <main>, which would drop keyboard focus.
+  // If the focused control still exists (same id) refocus it and keep the scroll
+  // position; otherwise move focus to the new page heading.
+  function restoreFocus(app, focusedId, focusWasInApp) {
+    var target = focusedId ? document.getElementById(focusedId) : null;
+    if (target && app.contains(target)) {
+      target.focus({ preventScroll: true });
+      return true;
+    }
+    if (focusWasInApp) {
+      var heading = app.querySelector("h1");
+      if (heading) {
+        heading.setAttribute("tabindex", "-1");
+        heading.focus({ preventScroll: true });
+      }
+    }
+    return false;
+  }
+
   function render() {
     var app = document.getElementById("app");
+    var active = document.activeElement;
+    var focusWasInApp = Boolean(active) && active !== app && app.contains(active);
+    var focusedId = focusWasInApp ? active.id : "";
+
     var route = parseHash();
     var page = matchRoute(route)();
     App.components.setSearchQuery(isBooksRoute(route) ? App.catalog.parseListFilters(route.params).q : "");
     app.textContent = "";
     app.appendChild(page.node);
     document.title = page.title + " | " + App.utils.SITE_NAME;
-    window.scrollTo(0, 0);
+
+    if (!restoreFocus(app, focusedId, focusWasInApp)) {
+      window.scrollTo(0, 0);
+    }
   }
 
   App.router = {
     parseHash: parseHash,
+    isBooksRoute: isBooksRoute,
     render: render
   };
 })(window.App = window.App || {});

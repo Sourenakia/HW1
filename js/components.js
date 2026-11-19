@@ -29,7 +29,13 @@
     ]);
     form.addEventListener("submit", function (event) {
       event.preventDefault();
-      location.hash = utils.buildBooksHash({ q: input.value.trim() });
+      // On the list page, keep the active filters so search combines with them.
+      var route = App.router.parseHash();
+      var filters = App.router.isBooksRoute(route)
+        ? App.catalog.parseListFilters(route.params)
+        : App.catalog.parseListFilters(new URLSearchParams());
+      filters.q = input.value.trim();
+      location.hash = App.catalog.buildListHash(filters);
     });
     return form;
   }

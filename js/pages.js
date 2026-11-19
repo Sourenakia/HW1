@@ -26,12 +26,64 @@
 
   function renderEmptyResults(query) {
     var message = query
-      ? "کتابی با «" + query + "» پیدا نشد."
-      : "کتابی برای نمایش نیست.";
+      ? "کتابی با «" + query + "» و این فیلترها پیدا نشد."
+      : "کتابی با این فیلترها پیدا نشد.";
     return el("div", { class: "empty-state" }, [
       el("p", { text: message }),
       el("a", { class: "button button--neutral", href: "#/books", text: "نمایش همهٔ کتاب‌ها" })
     ]);
+  }
+
+  function goToFilters(filters) {
+    location.hash = App.catalog.buildListHash(filters);
+  }
+
+  function renderCategorySelect(filters) {
+    var select = el("select", { id: "filter-category", class: "list-filters__select" }, [
+      el("option", { value: "", text: "همهٔ دسته‌ها" })
+    ]);
+    App.store.getCategoriesInUse().forEach(function (category) {
+      select.appendChild(el("option", { value: category.id, text: category.label }));
+    });
+    select.value = filters.category;
+    select.addEventListener("change", function () {
+      goToFilters({ q: filters.q, category: select.value, free: filters.free });
+    });
+    return el("div", { class: "list-filters__field" }, [
+      el("label", { for: "filter-category", text: "دسته" }),
+      select
+    ]);
+  }
+
+  function renderFreeCheckbox(filters) {
+    var checkbox = el("input", { id: "filter-free", type: "checkbox" });
+    checkbox.checked = filters.free;
+    checkbox.addEventListener("change", function () {
+      goToFilters({ q: filters.q, category: filters.category, free: checkbox.checked });
+    });
+    return el("div", { class: "list-filters__field" }, [
+      checkbox,
+      el("label", { for: "filter-free", text: "فقط رایگان" })
+    ]);
+  }
+
+  function renderListFilters(filters) {
+    var form = el("form", { class: "list-filters", "aria-label": "فیلتر کتاب‌ها" }, [
+      renderCategorySelect(filters),
+      renderFreeCheckbox(filters)
+    ]);
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+    });
+
+    if (App.catalog.hasActiveFilters(filters)) {
+      var clear = el("button", { class: "button button--neutral list-filters__clear", type: "button", text: "پاک کردن فیلترها" });
+      clear.addEventListener("click", function () {
+        location.hash = "#/books";
+      });
+      form.appendChild(clear);
+    }
+    return form;
   }
 
   function renderBooksPage(params) {
@@ -45,6 +97,7 @@
 
     var node = el("section", null, [
       el("h1", { text: title }),
+      renderListFilters(filters),
       renderListSummary(books.length, filters.q),
       content
     ]);
