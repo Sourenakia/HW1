@@ -31,9 +31,9 @@
 **با دابل‌کلیک روی `index.html` اجرا شود.** بدون نصب و بدون سرور. یعنی:
 
 - از `<script src="...">` معمولی استفاده کن، نه `type="module"` (ماژول‌ها روی `file://` بار نمی‌شوند)؛
-- اول `books.js` بیاید، بعد فایل‌های منطق؛
+- `theme-init.js` در `<head>` و پیش از CSS بیاید (تم پیش از رندر اول)، و در انتهای `<body>` اول `books.js` و بعد فایل‌های منطق به ترتیب وابستگی؛
 - همهٔ مسیرها نسبی باشند؛
-- هر فایل JS یا داخل یک IIFE باشد یا فقط یک متغیر سراسری با نام روشن بسازد.
+- هر فایل JS داخل یک IIFE باشد و فقط به شیء سراسری `App` اضافه کند (`books.js` فقط `CATEGORIES` و `BOOKS` را تعریف می‌کند).
 
 **رابط فارسی و راست‌به‌چپ** (`<html lang="fa" dir="rtl">`). عددها را با ارقام فارسی نشان بده.
 
@@ -53,21 +53,28 @@
 
 ```text
 HW1/
-├── index.html        # the only page
-├── css/style.css     # design tokens + all styles + dark theme
-├── js/books.js       # data only
-├── js/app.js         # all logic
+├── index.html          # the only page
+├── css/style.css       # design tokens + all styles + dark theme
+├── js/
+│   ├── theme-init.js   # in <head>: saved theme before first paint
+│   ├── books.js        # data only
+│   ├── utils.js        # DOM helper, icons, digits, formatting
+│   ├── store.js        # state, localStorage, validation, book queries
+│   ├── catalog.js      # search / filter / sort (pure)
+│   ├── components.js   # header, footer, card, dialog, toast, theme toggle
+│   ├── pages/          # one file per page (home, list, book, login, library, reader, misc)
+│   ├── router.js       # hash router
+│   └── app.js          # entry point
 ├── assets/
-│   ├── covers/       # our own SVG covers
-│   ├── fonts/        # Vazirmatn
-│   └── icons/        # optional SVG icons
-├── docs/             # assignment PDF + reference screenshots
-└── README.md         # how to run, tested browser, how to reset state
+│   ├── covers/         # our own SVG covers
+│   └── fonts/          # Vazirmatn (woff2) + OFL.txt
+├── docs/               # assignment PDF + reference screenshots
+└── README.md           # how to run, tested browser, how to reset state
 ```
 
 </div>
 
-اگر `app.js` از حدود ۴۰۰ تا ۵۰۰ خط بزرگ‌تر شد، پیشنهاد بده که تقسیمش کنیم، مثلاً به `utils.js`، `store.js`، `components.js`، `router.js` و یک فایل برای هر صفحه. اول طرح تقسیم را نشانم بده، بعد انجامش بده.
+اگر فایلی از حدود ۴۰۰ تا ۵۰۰ خط بزرگ‌تر شد، پیشنهاد بده که تقسیمش کنیم. اول طرح تقسیم را نشانم بده، بعد انجامش بده.
 
 ### شکل یک کتاب
 
@@ -243,7 +250,8 @@ const CATEGORIES = [
 
 | متغیر | مقدار | کجا |
 |---|---|---|
-| `--color-primary` | `#00A2A4` | رنگ اصلی فیروزه‌ای: دکمه‌ها، پیوندها، تب فعال |
+| `--color-primary` | `#00A2A4` | رنگ اصلی فیروزه‌ای: حلقهٔ فوکوس و جاهای غیرمتنی |
+| `--color-primary-strong` | `#00787A` | هر متن یا زمینهٔ پشت متن به رنگ فیروزه‌ای: نام پروژه، پیوندها، دکمهٔ «خرید»، متن «دریافت رایگان» (متن روی `#00A2A4` فقط حدود ۳ به ۱ کنتراست دارد) |
 | `--color-primary-soft` | `#E6F6F7` | زمینهٔ دکمهٔ «دریافت رایگان» |
 | `--color-bg` | `#FCFCFA` | زمینهٔ صفحه |
 | `--color-surface` | `#FFFFFF` | سربرگ و کارت‌ها |
@@ -252,12 +260,14 @@ const CATEGORIES = [
 | `--color-border` | `#EEEEEA` | قاب کارت |
 | `--color-divider` | `#D8D8D6` | خط‌های جداکننده |
 | `--color-text` | `#212121` | متن اصلی و ستارهٔ امتیاز |
-| `--color-text-muted` | `#7A7A7A` | نام نویسنده و متن‌های فرعی |
+| `--color-text-muted` | `#6B6B6B` | نام نویسنده و متن‌های فرعی (رنگ طاقچه `#7A7A7A` کنتراستش زیر ۴٫۵ بود) |
 | `--color-badge-free` | `#6D6E71` | برچسب «رایگان» روی جلد |
 | `--color-discount` | `#C62828` | برچسب قرمز درصد تخفیف روی جلد |
 | `--color-announce` | `#FFE4AE` | نوار اعلان زرد |
 
 طاقچه تم تیره ندارد. برای تم تیره خودمان مقدار انتخاب می‌کنیم، مثلاً زمینه `#121212`، کارت `#1E1E1E`، متن `#EDEDED` و رنگ اصلی کمی روشن‌تر، `#2BC0BE`.
+
+**کنتراست:** هر متن در هر دو تم دست‌کم ۴٫۵ به ۱ و حلقهٔ فوکوس دست‌کم ۳ به ۱. رنگ تازه را قبل از استفاده اندازه بگیر.
 
 ### اندازه‌ها
 
@@ -268,7 +278,7 @@ const CATEGORIES = [
 
 ### کارت کتاب
 
-- **عرض:** حدود ۱۸۰ پیکسل در دسکتاپ (۶ کارت در یک ردیف) و حدود ۱۱۰ در موبایل.
+- **عرض:** حدود ۱۸۰ پیکسل در دسکتاپ (۶ کارت در یک ردیف). در موبایل، گرید دقیقاً ۲ ستون است (حدود ۱۵۶ پیکسل در عرض ۳۶۰) و کارت‌های ردیف‌های افقی صفحهٔ اصلی ۱۴۰ پیکسل‌اند.
 - **جلد:** نسبت ۲ به ۳.
 - **زیر جلد، به ترتیب:** عنوان (حداکثر دو خط)، نویسنده با رنگ کم‌رنگ، امتیاز با ستاره، و قیمت که به پایین کارت چسبیده است (یا کلمهٔ «رایگان»). اگر کتاب تخفیف دارد، قیمت اصلی خط‌خورده و کم‌رنگ و قیمت نهایی پررنگ کنارش.
 - **برچسب:** «رایگان» (خاکستری) یا درصد تخفیف (قرمز) به شکل نشانی کوچک گوشهٔ بالای جلد.

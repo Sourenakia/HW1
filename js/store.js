@@ -110,8 +110,24 @@
 
   // ---------- Validation ----------
 
+  function normalizePhone(raw) {
+    return toLatinDigits(raw).trim();
+  }
+
+  // Validators return an error message, or "" when the value is valid.
+  function validateName(name) {
+    return String(name).trim() === "" ? "نام نمایشی را وارد کنید." : "";
+  }
+
+  function validatePhone(raw) {
+    var phone = normalizePhone(raw);
+    if (phone === "") return "شمارهٔ موبایل را وارد کنید.";
+    if (!/^09\d{9}$/.test(phone)) return "شماره باید ۱۱ رقم باشد و با ۰۹ شروع شود.";
+    return "";
+  }
+
   function isValidPhone(phone) {
-    return /^09\d{9}$/.test(toLatinDigits(phone));
+    return validatePhone(phone) === "";
   }
 
   function sanitizeIdList(value) {
@@ -168,13 +184,41 @@
     changeListeners.push(listener);
   }
 
-  // The single path for every change: update state, persist, re-render.
+  // The single path for every change: update state, persist, then tell
+  // listeners which part changed so they can update the page.
   function setState(part, value) {
     state[part] = value;
     saveState(part);
     changeListeners.forEach(function (listener) {
-      listener();
+      listener(part);
     });
+  }
+
+  // ---------- Favorites & library ----------
+
+  function isFavorite(id) {
+    return state.favorites.indexOf(id) !== -1;
+  }
+
+  // Returns true if the book is a favorite after the toggle.
+  function toggleFavorite(id) {
+    var wasFavorite = isFavorite(id);
+    var next = wasFavorite
+      ? state.favorites.filter(function (favId) { return favId !== id; })
+      : state.favorites.concat(id);
+    setState("favorites", next);
+    return !wasFavorite;
+  }
+
+  function isOwned(id) {
+    return state.library.indexOf(id) !== -1;
+  }
+
+  // Never adds a book twice. Returns true only if the book was newly added.
+  function addToLibrary(id) {
+    if (isOwned(id) || !findBookById(id)) return false;
+    setState("library", state.library.concat(id));
+    return true;
   }
 
   App.store = {
@@ -182,7 +226,14 @@
     loadState: loadState,
     setState: setState,
     onChange: onChange,
+    isFavorite: isFavorite,
+    toggleFavorite: toggleFavorite,
+    isOwned: isOwned,
+    addToLibrary: addToLibrary,
     isValidPhone: isValidPhone,
+    normalizePhone: normalizePhone,
+    validateName: validateName,
+    validatePhone: validatePhone,
     findBookById: findBookById,
     findCategoryById: findCategoryById,
     hasSample: hasSample,

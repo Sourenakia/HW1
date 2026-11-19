@@ -1,4 +1,4 @@
-/* Local font — uncomment once the Vazirmatn files are placed in assets/fonts/
+/* Vazirmatn v33.0.3, local files, SIL Open Font License 1.1 (assets/fonts/OFL.txt). */
 @font-face {
   font-family: "Vazirmatn";
   src: url("../assets/fonts/Vazirmatn-Regular.woff2") format("woff2");
@@ -13,7 +13,6 @@
   font-style: normal;
   font-display: swap;
 }
-*/
 
 :root {
   /* Colors */
@@ -28,10 +27,23 @@
   --color-border: #EEEEEA;
   --color-divider: #D8D8D6;
   --color-text: #212121;
-  --color-text-muted: #7A7A7A;
+  /* #7A7A7A (Taaghche) is only ~4.2:1 on our backgrounds; #6B6B6B is ≥ 4.9:1. */
+  --color-text-muted: #6B6B6B;
   --color-badge-free: #6D6E71;
   --color-discount: #C62828;
   --color-announce: #FFE4AE;
+  --color-backdrop: rgba(0, 0, 0, 0.45);
+  /* Text placed on a colored fill (primary button, badges). */
+  --color-on-primary: #FFFFFF;
+  --color-on-badge: #FFFFFF;
+  /* Error text; separate from the discount badge so dark mode stays readable. */
+  --color-error: #C62828;
+  /* Banner slide fills; white text on each is ≥ 5:1. Same in both themes. */
+  --color-banner-1: #00787A;
+  --color-banner-2: #5B4B8A;
+  --color-banner-3: #3E5C4A;
+  --color-on-banner: #FFFFFF;
+  color-scheme: light;
 
   /* Radii */
   --radius-cover: 4px;
@@ -62,12 +74,41 @@
   --gap-sections: var(--space-12);
 
   /* Typography */
-  --font-family: Tahoma, sans-serif;
+  --font-family: "Vazirmatn", Tahoma, sans-serif;
   --font-size-small: 12px;
   --font-size-body: 14px;
   --font-size-row-title: 16px;
   --font-size-book-title: 22px;
   --line-height-reader: 1.9;
+  --reader-size-small: 16px;
+  --reader-size-medium: 18px;
+  --reader-size-large: 22px;
+}
+
+/* Dark theme: set by data-theme on <html> (theme-init.js / app.js).
+   Taaghche has no dark mode; values are our own. Text contrast ≥ 4.5:1. */
+:root[data-theme="dark"] {
+  --color-primary: #2BC0BE;
+  --color-primary-strong: #2BC0BE;
+  --color-primary-soft: #133B3B;
+  --color-bg: #121212;
+  --color-surface: #1E1E1E;
+  --color-surface-muted: #2A2A2A;
+  --color-button-neutral: #333333;
+  --color-border: #2E2E2E;
+  --color-divider: #3A3A3A;
+  --color-text: #EDEDED;
+  --color-text-muted: #A8A8A8;
+  --color-badge-free: #5A5B5E;
+  --color-discount: #C62828;
+  --color-announce: #4A3B12;
+  --color-backdrop: rgba(0, 0, 0, 0.65);
+  --color-on-primary: #121212;
+  --color-on-badge: #FFFFFF;
+  --color-error: #FF8A80;
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.4);
+  --shadow-cover: 0 4px 16px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
 }
 
 /* Reset */
@@ -128,8 +169,24 @@ ol {
 
 /* Page headings get focus from the router after navigation (for screen
    readers); they are not controls, so no focus ring. */
-h1[tabindex="-1"]:focus {
+h1[tabindex="-1"]:focus,
+[data-focus-fallback]:focus {
   outline: none;
+}
+
+/* Library */
+.library-section + .library-section {
+  margin-top: var(--space-12);
+}
+
+/* Looks like a button, but is just text inside the card's single link. */
+.book-card__action {
+  display: inline-block;
+  padding: var(--space-1) var(--space-4);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-strong);
+  font-weight: 700;
 }
 
 /* Utilities */
@@ -174,7 +231,7 @@ h1[tabindex="-1"]:focus {
 
 .button--primary {
   background-color: var(--color-primary-strong);
-  color: var(--color-surface);
+  color: var(--color-on-primary);
   font-weight: 700;
 }
 
@@ -190,7 +247,8 @@ h1[tabindex="-1"]:focus {
   color: var(--color-primary-strong);
 }
 
-.button:disabled {
+.button:disabled,
+.button[aria-disabled="true"] {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -249,12 +307,17 @@ body {
   grid-area: logo;
   font-size: 18px;
   font-weight: 700;
-  color: var(--color-primary);
+  /* --color-primary text on white is ~3.1:1; 18px bold still needs 4.5:1. */
+  color: var(--color-primary-strong);
   white-space: nowrap;
 }
 
-.site-header__account {
+.site-header__actions {
   grid-area: account;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
 }
 
 .site-menu-toggle {
@@ -330,7 +393,7 @@ body {
 }
 
 .site-nav__link:hover {
-  color: var(--color-primary);
+  color: var(--color-primary-strong);
 }
 @media (min-width: 768px) {
   /* Desktop: logo (right) · search (center) · account (left); nav on a second row. */
@@ -399,7 +462,7 @@ body {
 }
 
 .site-footer__link:hover {
-  color: var(--color-primary);
+  color: var(--color-primary-strong);
 }
 
 #app h1 {
@@ -480,6 +543,13 @@ body {
   }
 }
 
+/* Exactly 2 columns on small phones (360px). */
+@media (max-width: 479px) {
+  .book-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 /* Book card */
 .book-card {
   position: relative;
@@ -521,7 +591,7 @@ body {
   padding: 2px var(--space-2);
   font-size: var(--font-size-small);
   line-height: 1.6;
-  color: var(--color-surface);
+  color: var(--color-on-badge);
   border-end-end-radius: var(--radius-cover);
 }
 
@@ -725,7 +795,7 @@ body {
   padding: 0 var(--space-2);
   border-radius: var(--radius-pill);
   background-color: var(--color-discount);
-  color: var(--color-surface);
+  color: var(--color-on-badge);
   font-size: var(--font-size-small);
 }
 
@@ -785,5 +855,634 @@ body {
   .purchase-box {
     max-width: none;
     margin-top: var(--space-12);
+  }
+}
+
+/* Header account */
+.site-header__account {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.site-account__name {
+  max-width: 96px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 700;
+}
+
+@media (min-width: 768px) {
+  .site-account__name {
+    max-width: 180px;
+  }
+}
+
+/* Forms */
+.login-page {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-purchase);
+}
+
+.login-form .button {
+  min-height: 44px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.form-field label {
+  font-weight: 700;
+}
+
+.text-input {
+  height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-card);
+  background-color: var(--color-surface);
+}
+
+/* Digits read left to right; keep the text aligned with the RTL label. */
+.text-input--ltr {
+  text-align: right;
+}
+
+.text-input[aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+
+.form-error {
+  font-size: var(--font-size-small);
+  color: var(--color-error);
+}
+
+.login-form__note {
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+}
+
+/* Favorite button (detail page) */
+.detail-fav[aria-pressed="true"] svg {
+  fill: var(--color-primary-strong);
+  stroke: var(--color-primary-strong);
+}
+
+.login-form__notice {
+  padding: var(--space-3);
+  border-radius: var(--radius-card);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-strong);
+  font-weight: 700;
+}
+
+/* Dialog */
+body.has-dialog {
+  overflow: hidden;
+}
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--page-gutter);
+  background-color: var(--color-backdrop);
+}
+
+.dialog {
+  width: 100%;
+  max-width: 400px;
+  padding: var(--space-6);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-purchase);
+  box-shadow: var(--shadow-cover);
+}
+
+.dialog__title {
+  margin-bottom: var(--space-3);
+  font-size: var(--font-size-row-title);
+}
+
+.dialog__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.dialog__price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.dialog__price strong {
+  font-size: 18px;
+}
+
+.dialog__original,
+.dialog__note {
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+}
+
+.dialog__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.dialog__actions .button {
+  flex: 1;
+  min-height: 44px;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: var(--space-6);
+  left: 0;
+  right: 0;
+  z-index: 200;
+  width: fit-content;
+  max-width: calc(100% - 2 * var(--page-gutter));
+  margin-inline: auto;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-text);
+  color: var(--color-surface);
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.toast.is-visible {
+  opacity: 1;
+}
+
+/* Theme toggles */
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-muted);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+/* Header: icon button in the top row on desktop, text button in the ☰ menu on mobile. */
+.site-header__theme {
+  display: none;
+}
+
+.site-nav__theme {
+  padding: var(--space-2) 0;
+}
+
+@media (min-width: 768px) {
+  .site-header__theme {
+    display: grid;
+  }
+
+  .site-nav__theme {
+    display: none;
+  }
+}
+
+/* Reader */
+/* Sticky only on wider screens: on a phone it wraps to 3 rows and would
+   cover too much of the text while reading. */
+.reader-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-8);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.reader-sizes {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* A floated legend sits inline with the options instead of above them. */
+.reader-sizes legend {
+  float: right;
+  margin-inline-end: var(--space-2);
+  padding: 0;
+  color: var(--color-text-muted);
+}
+
+.reader-size {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+
+.reader-sizes input:checked + .reader-size {
+  border-color: var(--color-primary-strong);
+  background-color: var(--color-primary-strong);
+  color: var(--color-on-primary);
+  font-weight: 700;
+}
+
+.reader-sizes input:focus-visible + .reader-size {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (min-width: 768px) {
+  .reader-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+}
+
+.reader {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.reader__header {
+  margin-bottom: var(--space-6);
+}
+
+#app .reader__title {
+  margin-bottom: var(--space-1);
+  font-size: var(--font-size-book-title);
+}
+
+.reader__author {
+  color: var(--color-text-muted);
+}
+
+.reader__text p {
+  margin-bottom: 1em;
+  line-height: var(--line-height-reader);
+  text-align: justify;
+}
+
+.reader[data-size="small"] .reader__text { font-size: var(--reader-size-small); }
+.reader[data-size="medium"] .reader__text { font-size: var(--reader-size-medium); }
+.reader[data-size="large"] .reader__text { font-size: var(--reader-size-large); }
+
+.reader__end {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-12);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-divider);
+  color: var(--color-text-muted);
+}
+
+/* Touch targets: at least 44px tall on phones and tablets (< 768px).
+   Desktop keeps the slimmer 36–40px controls, closer to Taaghche. */
+@media (max-width: 767px) {
+  .button,
+  .list-filters__select {
+    min-height: 44px;
+  }
+
+  .site-search__input,
+  .site-search__submit {
+    height: 44px;
+  }
+
+  .site-search__submit,
+  .site-menu-toggle,
+  .theme-toggle {
+    width: 44px;
+    height: 44px;
+  }
+
+  .site-nav__link {
+    padding: var(--space-3) 0;
+  }
+
+  /* The label is part of the control's hit area (checkbox, select). */
+  .list-filters__field label {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .reader-size {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* Keep the 32px circle so it doesn't cover the cover art,
+     but make the tappable area 44×44. */
+  .book-card__fav::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+  }
+}
+
+/* Skip link: off-screen until it receives keyboard focus. */
+.skip-link {
+  position: absolute;
+  top: var(--space-2);
+  inset-inline-start: var(--space-2);
+  z-index: 300;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-card);
+  background-color: var(--color-primary-strong);
+  color: var(--color-on-primary);
+  font-weight: 700;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+/* ---------- Home ---------- */
+.home-section {
+  margin-top: var(--gap-sections);
+}
+
+/* Prev / next buttons (banner and book rows) */
+.step-button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.step-button[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Banner */
+.banner {
+  position: relative;
+}
+
+.banner__slide {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-height: 280px;
+  padding: var(--space-6);
+  border-radius: var(--radius-banner);
+  color: var(--color-on-banner);
+}
+
+.banner__slide[hidden] {
+  display: none;
+}
+
+.banner__slide--1 { background-color: var(--color-banner-1); }
+.banner__slide--2 { background-color: var(--color-banner-2); }
+.banner__slide--3 { background-color: var(--color-banner-3); }
+
+.banner__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.banner__title {
+  font-size: 22px;
+  line-height: 1.5;
+}
+
+.banner__cta {
+  margin-top: var(--space-2);
+  background-color: var(--color-on-banner);
+  color: var(--color-banner-1);
+  font-weight: 700;
+}
+
+.banner__slide--2 .banner__cta { color: var(--color-banner-2); }
+.banner__slide--3 .banner__cta { color: var(--color-banner-3); }
+
+.banner__cta:focus-visible {
+  outline-color: var(--color-on-banner);
+}
+
+.banner__covers {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.banner__covers img {
+  width: 90px;
+  height: auto;
+  border-radius: var(--radius-cover);
+  box-shadow: var(--shadow-cover);
+}
+
+.banner__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: var(--space-3);
+}
+
+.banner__status {
+  min-width: 90px;
+  text-align: center;
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 768px) {
+  .banner__slide {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-8) var(--space-12);
+  }
+
+  .banner__title {
+    font-size: 28px;
+  }
+
+  .banner__covers img {
+    width: 120px;
+  }
+}
+
+/* Category tiles */
+.category-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--gap-cards);
+}
+
+.category-tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.category-tile:hover {
+  border-color: var(--color-primary-strong);
+}
+
+.category-tile__label {
+  font-weight: 700;
+  color: var(--color-primary-strong);
+}
+
+.category-tile__count {
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+}
+
+/* Book rows: the only place with horizontal scrolling, inside the track. */
+.book-row__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.book-row__header .section-title {
+  margin-bottom: 0;
+}
+
+.book-row__more {
+  margin-inline-start: auto;
+  color: var(--color-primary-strong);
+  font-weight: 700;
+}
+
+.book-row__steps {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.book-row__track {
+  display: flex;
+  gap: var(--gap-cards);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  /* Room so card focus rings aren't clipped by the scroll box; scroll-padding
+     makes snapping respect it (otherwise the row loads already scrolled 4px). */
+  padding: var(--space-1);
+  margin: calc(-1 * var(--space-1));
+  scroll-padding-inline: var(--space-1);
+  scrollbar-width: thin;
+}
+
+.book-row__track > .book-card {
+  flex: 0 0 140px;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 768px) {
+  .book-row__track > .book-card {
+    flex-basis: var(--card-width-desktop);
+  }
+}
+
+@media (max-width: 767px) {
+  .step-button {
+    width: 44px;
+    height: 44px;
+  }
+
+  .book-row__more {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+/* Category pills on the list page (filter) */
+.list-filters__categories {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  width: 100%;
+}
+
+.list-filters__label {
+  color: var(--color-text-muted);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-pill);
+  color: var(--color-primary-strong);
+}
+
+.chip:hover {
+  border-color: var(--color-primary-strong);
+}
+
+.chip[aria-current="true"] {
+  border-color: var(--color-primary-strong);
+  background-color: var(--color-primary-strong);
+  color: var(--color-on-primary);
+  font-weight: 700;
+}
+
+@media (max-width: 767px) {
+  .chip {
+    min-height: 44px;
   }
 }
