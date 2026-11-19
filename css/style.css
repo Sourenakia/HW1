@@ -285,7 +285,6 @@ body {
 .site-nav__link:hover {
   color: var(--color-primary);
 }
-
 @media (min-width: 768px) {
   /* Desktop: logo (right) · search (center) · account (left); nav on a second row. */
   .site-header__top {

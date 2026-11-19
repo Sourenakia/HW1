@@ -16,41 +16,62 @@
     return { title: title, node: el("section", null, [el("h1", { text: title }), grid]) };
   }
 
+  // Puts the user's query inside «…» as text. <bdi> isolates its direction so
+  // characters like < > or Latin text don't reorder the surrounding Persian.
+  function quotedQuery(before, query, after) {
+    return [
+      document.createTextNode(before + "«"),
+      el("bdi", { text: query }),
+      document.createTextNode("»" + after)
+    ];
+  }
+
   function renderListSummary(count, query) {
-    var countText = App.utils.toPersianDigits(count);
-    var text = query
-      ? countText + " نتیجه برای «" + query + "»"
-      : countText + " کتاب";
-    return el("p", { class: "list-summary", role: "status", text: text });
+    // "هیچ" instead of "۰": the Persian zero looks like a dot in many fonts.
+    var countText = count === 0 ? "هیچ" : App.utils.toPersianDigits(count);
+    var children = query
+      ? quotedQuery(countText + (count === 0 ? " نتیجه‌ای" : " نتیجه") + " برای ", query, "")
+      : [document.createTextNode(countText + (count === 0 ? " کتابی" : " کتاب"))];
+    return el("p", { class: "list-summary", role: "status" }, children);
   }
 
-  function renderEmptyResults(query) {
-    var message = query
-      ? "کتابی با «" + query + "» و این فیلترها پیدا نشد."
-      : "کتابی با این فیلترها پیدا نشد.";
+  function renderEmptyResults(filters) {
+    var children = filters.q
+      ? quotedQuery("کتابی با ", filters.q, " و این فیلترها پیدا نشد.")
+      : [document.createTextNode("کتابی با این فیلترها پیدا نشد.")];
+    // Same as "پاک کردن فیلترها": drop search and filters, keep the sort order.
+    var allBooksHash = App.catalog.buildListHash({ q: "", category: "", free: false, sort: filters.sort });
     return el("div", { class: "empty-state" }, [
-      el("p", { text: message }),
-      el("a", { class: "button button--neutral", href: "#/books", text: "نمایش همهٔ کتاب‌ها" })
+      el("p", null, children),
+      el("a", { class: "button button--neutral", href: allBooksHash, text: "نمایش همهٔ کتاب‌ها" })
     ]);
   }
 
-  function goToFilters(filters) {
-    location.hash = App.catalog.buildListHash(filters);
+  // Navigates to the list with one filter changed and all others kept.
+  function goToFilters(filters, key, value) {
+    var next = { q: filters.q, category: filters.category, free: filters.free, sort: filters.sort };
+    next[key] = value;
+    location.hash = App.catalog.buildListHash(next);
   }
 
-  function renderCategorySelect(filters) {
-    var select = el("select", { id: "filter-category", class: "list-filters__select" }, [
-      el("option", { value: "", text: "همهٔ دسته‌ها" })
-    ]);
-    App.store.getCategoriesInUse().forEach(function (category) {
-      select.appendChild(el("option", { value: category.id, text: category.label }));
-    });
-    select.value = filters.category;
+  var SORT_OPTIONS = [
+    { value: "", label: "جدیدترین" },
+    { value: "price-asc", label: "ارزان‌ترین" },
+    { value: "price-desc", label: "گران‌ترین" },
+    { value: "rating", label: "بیشترین امتیاز" }
+  ];
+
+  function renderSortSelect(filters) {
+    var select = el("select", { id: "filter-sort", class: "list-filters__select" },
+      SORT_OPTIONS.map(function (option) {
+        return el("option", { value: option.value, text: option.label });
+      }));
+    select.value = filters.sort;
     select.addEventListener("change", function () {
-      goToFilters({ q: filters.q, category: select.value, free: filters.free });
+      goToFilters(filters, "sort", select.value);
     });
     return el("div", { class: "list-filters__field" }, [
-      el("label", { for: "filter-category", text: "دسته" }),
+      el("label", { for: "filter-sort", text: "مرتب‌سازی" }),
       select
     ]);
   }
@@ -59,7 +80,7 @@
     var checkbox = el("input", { id: "filter-free", type: "checkbox" });
     checkbox.checked = filters.free;
     checkbox.addEventListener("change", function () {
-      goToFilters({ q: filters.q, category: filters.category, free: checkbox.checked });
+      goToFilters(filters, "free", checkbox.checked);
     });
     return el("div", { class: "list-filters__field" }, [
       checkbox,
@@ -69,8 +90,8 @@
 
   function renderListFilters(filters) {
     var form = el("form", { class: "list-filters", "aria-label": "فیلتر کتاب‌ها" }, [
-      renderCategorySelect(filters),
-      renderFreeCheckbox(filters)
+      renderFreeCheckbox(filters),
+      renderSortSelect(filters)
     ]);
     form.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -79,7 +100,8 @@
     if (App.catalog.hasActiveFilters(filters)) {
       var clear = el("button", { class: "button button--neutral list-filters__clear", type: "button", text: "پاک کردن فیلترها" });
       clear.addEventListener("click", function () {
-        location.hash = "#/books";
+        // Clears search and filters; the chosen sort order is kept.
+        location.hash = App.catalog.buildListHash({ q: "", category: "", free: false, sort: filters.sort });
       });
       form.appendChild(clear);
     }
@@ -93,7 +115,7 @@
 
     var content = books.length > 0
       ? el("div", { class: "book-grid" }, books.map(renderBookCard))
-      : renderEmptyResults(filters.q);
+      : renderEmptyResults(filters);
 
     var node = el("section", null, [
       el("h1", { text: title }),
